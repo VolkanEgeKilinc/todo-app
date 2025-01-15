@@ -3,14 +3,14 @@ name: Deploy to Heroku
 on:
   push:
     branches:
-      - master  # master branch'ına push yapıldığında tetiklenir.
+      - master  # Master branch'ına push yapıldığında tetiklenir.
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2  # Reposu checkout eder
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -19,15 +19,16 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install
+          npm install  # Uygulamanın bağımlılıklarını yükler.
 
       - name: Log in to Heroku
-        uses: akshnz/heroku-cli-action@v2
+        uses: akshnz/heroku-cli-action@v2  # Heroku CLI'yi kullanarak login işlemi yapılır.
         with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}  # Heroku API anahtarını kullanıyoruz.
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}  # Heroku API anahtarını burada kullanıyoruz.
 
       - name: Deploy to Heroku
         run: |
-          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
-          git push heroku master
+          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git  # Heroku remote ekler
+          git push heroku master  # Değişiklikleri Heroku'ya gönderir.
+
 
