@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2  # Reposu checkout eder
+        uses: actions/checkout@v2
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -19,17 +19,21 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install  # Uygulamanın bağımlılıklarını yükler.
+          npm install
+
+      - name: Install Heroku CLI
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
 
       - name: Log in to Heroku
-        uses: heroku/heroku-cli-action@v0.3.0  # Heroku CLI'yi kullanarak login işlemi yapılır.
-        with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}  # Heroku API anahtarını burada kullanıyoruz.
+        run: |
+          echo ${{ secrets.HEROKU_API_KEY }} | heroku auth:token
 
       - name: Deploy to Heroku
         run: |
-          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git  # Heroku remote ekler
-          git push heroku master  # Değişiklikleri Heroku'ya gönderir.
+          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+          git push heroku master
+
 
 
 
