@@ -3,28 +3,31 @@ name: Deploy to Heroku
 on:
   push:
     branches:
-      - master  # master branch'ına yapılan her push işlemi tetiklenecek.
+      - master  # master branch'ına push yapıldığında tetiklenir.
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'  # Node.js'in sürümünü belirtin.
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # Kullanmak istediğiniz Node.js versiyonunu belirtin.
 
-    - name: Install dependencies
-      run: |
-        npm install
+      - name: Install dependencies
+        run: |
+          npm install
 
-    - name: Deploy to Heroku
-      uses: akshnz/heroku-deploy@v1.0.1
-      with:
-        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-        heroku_app_name: 'evening-tundra-17361'  # Heroku'da oluşturduğunuz uygulamanın ismi.
-        heroku_email: 'lt.volkanege@gmail.com'  # Heroku'daki e-posta adresiniz.
+      - name: Log in to Heroku
+        uses: akshnz/heroku-cli-action@v2
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}  # Heroku API anahtarını kullanıyoruz.
+
+      - name: Deploy to Heroku
+        run: |
+          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+          git push heroku master
+
