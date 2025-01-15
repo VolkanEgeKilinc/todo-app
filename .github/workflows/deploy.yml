@@ -21,10 +21,13 @@ jobs:
         run: |
           npm install
 
+      - name: Install Heroku CLI
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+
       - name: Log in to Heroku
-        uses: akshnz/heroku-cli-action@v2
-        with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}  # API anahtarını burada kullanıyoruz.
+        run: |
+          echo ${{ secrets.HEROKU_API_KEY }} | heroku auth:token
 
       - name: Deploy to Heroku
         run: |
