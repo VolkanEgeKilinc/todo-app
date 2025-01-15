@@ -27,12 +27,12 @@ jobs:
 
       - name: Log in to Heroku
         run: |
-          echo ${{ secrets.HEROKU_API_KEY }} | heroku login --api-key
+          echo ${{ secrets.HEROKU_API_KEY }} | heroku auth:token
 
 
       - name: Deploy to Heroku
         run: |
-          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+          git remote add heroku https://git.heroku.com/evening-tundra-17361.git
           git push heroku master
 
 
