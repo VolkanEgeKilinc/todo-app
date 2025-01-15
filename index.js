@@ -12,6 +12,8 @@ app.get('/todos', (req, res) => {
     res.json(todos);
 });
 
+//TEST
+
 // Yeni bir todo ekle
 app.post('/todos', (req, res) => {
     const newTodo = {
