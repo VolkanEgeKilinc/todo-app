@@ -1,0 +1,30 @@
+name: Deploy to Heroku
+
+on:
+  push:
+    branches:
+      - master  # master branch'ına yapılan her push işlemi tetiklenecek.
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'  # Node.js'in sürümünü belirtin.
+
+    - name: Install dependencies
+      run: |
+        npm install
+
+    - name: Deploy to Heroku
+      uses: akshnz/heroku-deploy@v1.0.1
+      with:
+        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+        heroku_app_name: 'evening-tundra-17361'  # Heroku'da oluşturduğunuz uygulamanın ismi.
+        heroku_email: 'lt.volkanege@gmail.com'  # Heroku'daki e-posta adresiniz.
