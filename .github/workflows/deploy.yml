@@ -1,40 +1,37 @@
-name: Deploy to Azure Container Instances
+name: Deploy to Heroku
 
 on:
   push:
     branches:
-      - master  # Master branch'ına push yapıldığında tetiklenir.
+      - master  # master branch'ına push yapıldığında tetiklenir.
 
 jobs:
-  build_and_deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Build Docker image
-        run: |
-          docker build -t myapp .
-
-      - name: Log in to Azure CLI
-        uses: azure/login@v1
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          node-version: '14'  # Kullanmak istediğiniz Node.js versiyonunu belirtin.
 
-      - name: Push image to Azure Container Registry (ACR)
+      - name: Install dependencies
         run: |
-          docker tag myapp myregistry.azurecr.io/myapp:latest
-          docker push myregistry.azurecr.io/myapp:latest
+          npm install
 
-      - name: Deploy to Azure Container Instances
+      - name: Install Heroku CLI
         run: |
-          az container create \
-            --name myapp \
-            --image myregistry.azurecr.io/myapp:latest \
-            --resource-group myResourceGroup \
-            --cpu 1 --memory 1.5Gi \
-            --restart-policy Always
+          curl https://cli-assets.heroku.com/install.sh | sh
+
+      - name: Log in to Heroku
+        run: |
+          echo ${{ secrets.HEROKU_API_KEY }} | heroku auth:token
+
+      - name: Deploy to Heroku
+        run: |
+          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+          git push heroku master
+
 
